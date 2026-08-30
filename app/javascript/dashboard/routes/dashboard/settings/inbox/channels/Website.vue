@@ -18,7 +18,7 @@ export default {
     return {
       inboxName: '',
       channelWebsiteUrl: '',
-      channelWidgetColor: '#009CE0',
+      channelWidgetColor: '#f2790e', // FOXXY
       channelWelcomeTitle: '',
       channelWelcomeTagline: '',
       greetingEnabled: false,

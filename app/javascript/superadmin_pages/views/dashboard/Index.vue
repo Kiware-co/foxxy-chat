@@ -38,7 +38,7 @@ const chartData = computed(() => {
       {
         id: 'conversations',
         label: 'Conversations',
-        color: '#1f93ff',
+        color: '#f2790e',
         data: sourceData.map(([, value]) => value),
       },
     ],

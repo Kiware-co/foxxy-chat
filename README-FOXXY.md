@@ -123,7 +123,20 @@ oscuro (p.ej. `#cc4e00`, que da 4.6:1) sin tocar el resto de la escala.
 | --- | --- |
 | `theme/colors.js` | Escala `woot` (`blue`/`blueDark` → `orange`/`orangeDark` de Radix) y `n.brand` (`#2781F6` → `#f2790e`). Es el punto de cambio principal: `tailwind.config.js` importa de aqui. |
 | `app/javascript/dashboard/assets/scss/_next-colors.scss` | Escala `--blue-1..12` (light + dark) y tokens derivados retintados a naranja. |
-| `app/javascript/dashboard/assets/scss/super_admin/index.scss` | Mismos tokens (`--text-blue`, `--solid-blue`, `--border-blue`) para el panel de super admin, que tiene su propia copia. |
+| `app/javascript/dashboard/assets/scss/super_admin/index.scss` | Mismos tokens (`--text-blue`, `--solid-blue`, `--border-blue`): el panel de super admin tiene su propia copia de las variables. |
+| `app/javascript/widget/assets/scss/woot.scss` | Idem: el widget embebido tiene su tercera copia de esos tokens. |
+| `app/javascript/dashboard/modules/widget-preview/components/Widget.vue` | Idem: la vista previa del widget tiene una cuarta copia. |
+| `app/javascript/dashboard/routes/dashboard/commands/commandbar.vue` | `--ninja-accent-color` de la paleta de comandos (Cmd+K). |
+| `app/javascript/dashboard/components-next/message/MessageStatus.vue` | Tick de "leido": tenia `text-[#7EB6FF]` (el `--blue-11` oscuro) escrito a mano. |
+| `app/javascript/sdk/sdk.css` | Fondo por defecto de la burbuja lanzadora del widget embebido (`.woot-widget-bubble`), antes de que el JS aplique el color del inbox. Es codigo que se sirve en la web del cliente. |
+| `app/javascript/dashboard/routes/dashboard/settings/inbox/channels/Website.vue` | Color preseleccionado al crear un inbox de tipo web (`#009CE0`, un tercer azul distinto). |
+| `app/javascript/dashboard/components/widgets/WootWriter/AudioRecorder.vue` | Color de la onda del grabador de audio. |
+| `app/javascript/superadmin_pages/views/dashboard/Index.vue` | Color de la grafica del dashboard de super admin. |
+| `app/views/super_admin/application/_icons.html.erb` | Icono SVG con `fill` azul. |
+| `app/assets/stylesheets/administrate/utilities/_variables.scss` | `$color-woot`, el color de marca del panel administrate. |
+| `app/views/layouts/mailer/base.liquid` | Plantilla base de los emails de notificacion: barra de acento y boton en `#f2790e`, texto y enlaces en `#cc4e00` (el naranja accesible de la escala). |
+| `app/models/portal.rb`, `app/services/onboarding/web_widget_creation_service.rb` | Constantes Ruby `DEFAULT_COLOR` / `DEFAULT_WIDGET_COLOR`. **No son migraciones**: cambiarlas no toca la base de datos. |
+| `public/{404,422,500}.html` | Paginas de error estaticas: degradado y boton en azul de marca. |
 | `theme/icons.js` | Icono `status-open` (conversacion abierta): usaba el hex de marca `#2781f6`. |
 | `app/javascript/dashboard/components-next/HelpCenter/PortalSwitcher/CreatePortalDialog.vue` | Color por defecto de un portal nuevo del centro de ayuda. |
 | `app/javascript/dashboard/components-next/message/bubbles/Dyte.vue` | `bg-[#2781F6]` hardcodeado en la burbuja de videollamada. |
@@ -132,7 +145,7 @@ oscuro (p.ej. `#cc4e00`, que da 4.6:1) sin tocar el resto de la escala.
 | `app/views/layouts/vueapp.html.erb` | `<meta name="theme-color">` y `msapplication-TileColor`. **El `<link rel="icon" sizes="512x512">` NO se toca**: ya usa `@global_config['LOGO_THUMBNAIL']`, que viene de `installation_configs`. |
 | `app/views/devise/mailer/_confirmation_body.html.erb` | Boton y enlace del email de confirmacion de cuenta. |
 | `public/manifest.json` | `name`/`short_name` → "Foxxy Chat", `theme_color`/`background_color` → `#f2790e`. |
-| `public/*.png` (27 ficheros) | `android-icon-*`, `apple-icon-*`, `favicon-*`, `favicon-badge-*`, `ms-icon-*` regenerados desde el logo de Foxxy. Ver seccion 4. |
+| `public/*.png` (28 ficheros) | `android-icon-*`, `apple-icon-*`, `favicon-*`, `favicon-badge-*`, `ms-icon-*` regenerados desde el logo de Foxxy. Ver seccion 4. |
 | `public/brand-assets/{logo,logo_dark,logo_thumbnail}.svg` | Assets de marca **por defecto**. En produccion los sobrescribe `installation_configs`, pero `app/views/super_admin/application/_navigation.html.erb` y la pagina de onboarding los referencian por ruta fija. |
 | `docker/build-foxxy.sh` | *(nuevo)* Build reproducible de la imagen CE. |
 | `README-FOXXY.md` | *(nuevo)* Este documento. |
@@ -238,8 +251,19 @@ git push origin foxxy-main --force-with-lease --tags
 
 ### Checklist de verificacion tras rebasear
 
-1. `grep -rni '2781f6' . | grep -v node_modules` → solo debe salir en
-   `app/javascript/dashboard/components-next/icon/Logo.vue` (ver seccion 7).
+1. Barrido de azules. Ninguno de estos debe aparecer fuera de lo listado en la
+   seccion 7:
+
+   ```bash
+   for h in 2781f6 1f93ff 009ce0 7eb6ff 086de0 daecff "39, 129, 246"; do
+     echo "== $h"; grep -rli "$h" app/ theme/ config/ public/ | grep -v '\.png$'
+   done
+   ```
+
+   Ojo: la escala de acento del design system "next" esta **duplicada en cuatro
+   ficheros** (`_next-colors.scss`, `super_admin/index.scss`, `widget/.../woot.scss`
+   y `widget-preview/.../Widget.vue`). Si upstream anade un token nuevo, hay que
+   retintarlo en los cuatro.
 2. `./docker/build-foxxy.sh <tag>` termina sin errores.
 3. Arrancar la imagen y comprobar a ojo: boton primario naranja, sidebar,
    modo oscuro, favicon, y que verde/rojo/ambar siguen siendo verde/rojo/ambar.
@@ -253,13 +277,21 @@ git push origin foxxy-main --force-with-lease --tags
   esta vacio**, y en produccion no lo esta (`installation_configs`). Se deja
   intacto porque es la marca registrada de Chatwoot: preferimos no renderizarla
   a repintarla de naranja.
-- **`#1f93ff` como valor por defecto de columna en base de datos** —
-  `channel_web_widgets.widget_color`, `labels.color` y `Portal::DEFAULT_COLOR`.
-  Cambiarlos exige una migracion, y una migracion se ejecuta contra la base de
-  datos de produccion en el despliegue. Fuera de alcance a proposito. Efecto
-  practico: **un inbox o etiqueta creado de cero nace azul** hasta que se le
-  cambia el color a mano en la UI. Si se quiere arreglar, la via limpia es una
-  migracion propia en el fork, no editar `db/schema.rb`.
+- **`#1f93ff` como valor por defecto de COLUMNA en base de datos** —
+  `channel_web_widgets.widget_color` y `labels.color` (`db/schema.rb`, y el
+  comentario de anotacion en `app/models/channel/web_widget.rb` y
+  `app/models/label.rb`). Cambiarlos exige una migracion, y una migracion se
+  ejecuta contra la base de datos de produccion en el despliegue: fuera de
+  alcance a proposito. En la practica casi no se nota, porque las dos rutas por
+  las que se crea un widget si pasan color explicito y ya son naranjas
+  (`Onboarding::WebWidgetCreationService::DEFAULT_WIDGET_COLOR` y el color
+  preseleccionado en `Website.vue`). El hueco real que queda: **una etiqueta
+  creada por API sin color nace azul**. Si algun dia molesta, la via limpia es
+  una migracion propia en el fork, nunca editar `db/schema.rb` a mano.
+- **`$blue: #1f93ff !default`** en `app/assets/stylesheets/administrate/library/_variables.scss`
+  — es la paleta de colores con nombre de la gema administrate, no la marca. El
+  que si es marca (`$color-woot`) esta en `utilities/_variables.scss` y ya es naranja.
+- **`app/javascript/dashboard/helper/specs/fixtures/automationFixtures.js`** — fixture de tests.
 - Los colores semanticos (verde/rojo/ambar/violeta/teal/iris) se quedan como
   estan: son estado, no marca.
 
