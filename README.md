@@ -1,3 +1,10 @@
+> **Foxxy Chat** — fork de marca de Chatwoot mantenido por [Kiware](https://github.com/Kiware-co).
+> Parte del tag upstream `v4.17.1` (Community Edition). Solo cambia la identidad visual: paleta e iconos.
+> **Que se ha tocado, por que, y como rebasear sobre una version nueva de Chatwoot: [README-FOXXY.md](./README-FOXXY.md).**
+> El README original de Chatwoot se conserva intacto a continuacion.
+
+---
+
 <img src="./.github/screenshots/header.png#gh-light-mode-only" width="100%" alt="Header light mode"/>
 <img src="./.github/screenshots/header-dark.png#gh-dark-mode-only" width="100%" alt="Header dark mode"/>
 
