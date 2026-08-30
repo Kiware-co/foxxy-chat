@@ -22,7 +22,8 @@
 set -euo pipefail
 
 TAG="${1:?Uso: $0 <tag-completo-de-la-imagen>}"
-DOCKER="${DOCKER:-docker}"
+# DOCKER admite prefijos, p.ej. DOCKER="sudo -n docker"
+read -r -a DOCKER <<< "${DOCKER:-docker}"
 
 cd "$(git rev-parse --show-toplevel)"
 
@@ -41,7 +42,7 @@ echo "==> Marcando la edicion como CE"
 printf '\nENV CW_EDITION="ce"\n' >> docker/Dockerfile
 
 echo "==> docker build -> ${TAG}"
-"$DOCKER" build \
+"${DOCKER[@]}" build \
   --file docker/Dockerfile \
   --tag "${TAG}" \
   .

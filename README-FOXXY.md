@@ -185,7 +185,7 @@ El repo trae `docker/build-foxxy.sh`, que replica el workflow oficial
 # En un clon LIMPIO y desechable (el script borra enterprise/ y edita el Dockerfile)
 git clone --depth 1 --branch foxxy-main https://github.com/Kiware-co/foxxy-chat.git
 cd foxxy-chat
-./docker/build-foxxy.sh localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.1
+DOCKER="sudo -n docker" ./docker/build-foxxy.sh localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.1
 docker push localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.1
 ```
 
