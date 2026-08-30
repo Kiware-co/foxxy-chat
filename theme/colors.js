@@ -1,6 +1,6 @@
 const {
-  blue,
-  blueDark,
+  orange,
+  orangeDark,
   green,
   greenDark,
   yellow,
@@ -14,19 +14,23 @@ const {
 } = require('@radix-ui/colors');
 
 export const colors = {
+  // FOXXY: la escala de marca era `blue`/`blueDark` de Radix (azul Chatwoot).
+  // Se sustituye por `orange`/`orangeDark` manteniendo EXACTAMENTE el mismo
+  // mapeo de pasos (25->900), para no alterar el ramp de luminancia ni el
+  // comportamiento en modo oscuro. Ver README-FOXXY.md.
   woot: {
-    25: blue.blue2,
-    50: blue.blue3,
-    75: blue.blue4,
-    100: blue.blue5,
-    200: blue.blue7,
-    300: blue.blue8,
-    400: blueDark.blue11,
-    500: blueDark.blue10,
-    600: blueDark.blue9,
-    700: blueDark.blue8,
-    800: blueDark.blue6,
-    900: blueDark.blue2,
+    25: orange.orange2, // #fff7ed
+    50: orange.orange3, // #ffefd6
+    75: orange.orange4, // #ffdfb5
+    100: orange.orange5, // #ffd19a
+    200: orange.orange7, // #f5ae73
+    300: orange.orange8, // #ec9455
+    400: orangeDark.orange11, // #ffa057
+    500: orangeDark.orange10, // #ff801f
+    600: orangeDark.orange9, // #f76b15
+    700: orangeDark.orange8, // #a35829
+    800: orangeDark.orange6, // #66350c
+    900: orangeDark.orange2, // #1e160f
   },
   green: {
     50: greenDark.green12,
@@ -226,7 +230,7 @@ export const colors = {
     },
 
     black: '#000000',
-    brand: '#2781F6',
+    brand: '#f2790e', // FOXXY: color de marca (--color-focus de foxxy.pro)
     portal: 'var(--dynamic-portal-color)',
     'portal-soft': 'var(--dynamic-portal-color-soft)',
     'portal-faint': 'var(--dynamic-portal-color-faint)',
