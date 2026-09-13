@@ -14,6 +14,10 @@ import { useI18n } from 'vue-i18n';
 import SimpleDivider from '../../components/Divider/SimpleDivider.vue';
 
 const FOXXY_SIGN_IN_URL = 'https://app.foxxy.pro/chat/entrar';
+// Enlazado con :src y no escrito en el template: con una ruta absoluta estática en <img src>, el
+// plugin de Vue la convierte en un import y el build de producción falla (Rollup no resuelve
+// /brand-assets/…, que vive en public/). Es la misma forma que usa upstream en Logo.vue.
+const FOXXY_LOGO_SRC = '/brand-assets/logo_thumbnail.svg';
 
 const { t, locale } = useI18n();
 
@@ -31,7 +35,7 @@ const label = computed(() =>
       class="inline-flex justify-center w-full px-4 py-3 bg-n-background dark:bg-n-solid-3 items-center rounded-md shadow-sm ring-1 ring-inset ring-n-container dark:ring-n-container focus:outline-offset-0 hover:bg-n-alpha-2 dark:hover:bg-n-alpha-2"
     >
       <img
-        src="/brand-assets/logo_thumbnail.svg"
+        :src="FOXXY_LOGO_SRC"
         alt=""
         aria-hidden="true"
         class="h-6 w-auto"
