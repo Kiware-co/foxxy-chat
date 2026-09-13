@@ -13,7 +13,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import SimpleDivider from '../../components/Divider/SimpleDivider.vue';
 
-const FOXXY_SIGN_IN_URL = 'https://app.foxxy.pro/chat/entrar';
+const FOXXY_SIGN_IN_URL = 'https://app.foxxy.pro/chat/sign-in';
 // Enlazado con :src y no escrito en el template: con una ruta absoluta estática en <img src>, el
 // plugin de Vue la convierte en un import y el build de producción falla (Rollup no resuelve
 // /brand-assets/…, que vive en public/). Es la misma forma que usa upstream en Logo.vue.

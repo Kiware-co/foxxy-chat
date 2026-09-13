@@ -1,6 +1,6 @@
 // FOXXY: prueba del boton «Iniciar sesion con Foxxy» (spec 073 de olympus-ms-front).
 // El destino es un contrato con el panel de Foxxy: si esta prueba cambia, cambia tambien la ruta
-// /chat/entrar de apps/admin, y el panel se despliega ANTES que este fork.
+// /chat/sign-in de apps/admin, y el panel se despliega ANTES que este fork.
 import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import FoxxyLoginButton from './FoxxyLoginButton.vue';
@@ -19,7 +19,7 @@ function mountWithLocale(locale) {
 describe('FoxxyLoginButton.vue', () => {
   it('enlaza exactamente a la ruta de rebote del panel, en la misma ventana', () => {
     const link = mountWithLocale('es').find('a');
-    expect(link.attributes('href')).toBe('https://app.foxxy.pro/chat/entrar');
+    expect(link.attributes('href')).toBe('https://app.foxxy.pro/chat/sign-in');
     expect(link.attributes('target')).toBeUndefined();
     expect(link.attributes('rel')).toBeUndefined();
   });

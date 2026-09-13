@@ -8,7 +8,7 @@ con la identidad visual de **Foxxy** (naranja + zorro) aplicada al panel de agen
 - **Rama de trabajo:** `foxxy-main` (parches Foxxy aplicados encima del tag)
 - **Imagen resultante:** `localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.<n>` (desplegada a 13 sep 2026:
   `foxxy.2` en los servicios `chatwoot-web` y `chatwoot-worker` de Dokploy; la siguiente, con el boton
-  «Iniciar sesion con Foxxy», es `foxxy.3`, y va **despues** de que el panel publique `/chat/entrar`)
+  «Iniciar sesion con Foxxy», es `foxxy.3`, y va **despues** de que el panel publique `/chat/sign-in`)
   (sustituye a `localhost:5000/kiware-co/chatwoot:v4.17.1-ce`)
 
 Chatwoot es software MIT (salvo el directorio `enterprise/`, que tiene licencia
@@ -149,8 +149,8 @@ oscuro (p.ej. `#cc4e00`, que da 4.6:1) sin tocar el resto de la escala.
 | `public/manifest.json` | `name`/`short_name` → "Foxxy Chat", `theme_color`/`background_color` → `#f2790e`, y `"scope": "/"` explicito (spec 073; es el valor por defecto con `start_url` `/`). |
 | `public/*.png` (28 ficheros) | `android-icon-*`, `apple-icon-*`, `favicon-*`, `favicon-badge-*`, `ms-icon-*` regenerados desde el logo de Foxxy. Ver seccion 4. |
 | `public/brand-assets/{logo,logo_dark,logo_thumbnail}.svg` | Assets de marca **por defecto**. En produccion los sobrescribe `installation_configs`, pero `app/views/super_admin/application/_navigation.html.erb` y la pagina de onboarding los referencian por ruta fija. |
-| `app/javascript/v3/views/login/FoxxyLoginButton.vue` | *(nuevo, spec 073 de olympus-ms-front)* Boton «Iniciar sesion con Foxxy»: enlace fijo a `https://app.foxxy.pro/chat/entrar`, que pide la URL SSO con la cuenta de Foxxy y vuelve ya dentro. Texto en el propio componente (es/en), no en los JSON de locale de upstream. |
-| `app/javascript/v3/views/login/FoxxyLoginButton.spec.js` | *(nuevo)* Fija el destino exacto del boton. Si cambia, cambia tambien la ruta `/chat/entrar` del panel, y el panel se despliega antes. |
+| `app/javascript/v3/views/login/FoxxyLoginButton.vue` | *(nuevo, spec 073 de olympus-ms-front)* Boton «Iniciar sesion con Foxxy»: enlace fijo a `https://app.foxxy.pro/chat/sign-in`, que pide la URL SSO con la cuenta de Foxxy y vuelve ya dentro. Texto en el propio componente (es/en), no en los JSON de locale de upstream. |
+| `app/javascript/v3/views/login/FoxxyLoginButton.spec.js` | *(nuevo)* Fija el destino exacto del boton. Si cambia, cambia tambien la ruta `/chat/sign-in` del panel, y el panel se despliega antes. |
 | `app/javascript/v3/views/login/Index.vue` | Tres lineas `FOXXY:` que importan, registran y pintan `FoxxyLoginButton` al principio del bloque de metodos alternativos (fuera del flujo SSO). |
 | `docker/build-foxxy.sh` | *(nuevo)* Build reproducible de la imagen CE. |
 | `README-FOXXY.md` | *(nuevo)* Este documento. |

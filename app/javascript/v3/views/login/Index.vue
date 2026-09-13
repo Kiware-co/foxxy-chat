@@ -348,7 +348,7 @@ export default {
     >
       <div v-if="!email">
         <div class="flex flex-col gap-4">
-          <!-- FOXXY: spec 073, entrar con la cuenta de Foxxy (rebote a app.foxxy.pro/chat/entrar) -->
+          <!-- FOXXY: spec 073, entrar con la cuenta de Foxxy (rebote a app.foxxy.pro/chat/sign-in) -->
           <FoxxyLoginButton />
           <GoogleOAuthButton v-if="showGoogleOAuth" />
           <div v-if="showSamlLogin" class="text-center">
