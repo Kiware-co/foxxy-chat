@@ -6,7 +6,9 @@ con la identidad visual de **Foxxy** (naranja + zorro) aplicada al panel de agen
 - **Upstream:** `chatwoot/chatwoot`
 - **Version base:** tag **`v4.17.1`** (Community Edition, sin `enterprise/`)
 - **Rama de trabajo:** `foxxy-main` (parches Foxxy aplicados encima del tag)
-- **Imagen resultante:** `localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.1`
+- **Imagen resultante:** `localhost:5000/kiware-co/foxxy-chat:v4.17.1-foxxy.<n>` (desplegada a 13 sep 2026:
+  `foxxy.2` en los servicios `chatwoot-web` y `chatwoot-worker` de Dokploy; la siguiente, con el boton
+  «Iniciar sesion con Foxxy», es `foxxy.3`, y va **despues** de que el panel publique `/chat/entrar`)
   (sustituye a `localhost:5000/kiware-co/chatwoot:v4.17.1-ce`)
 
 Chatwoot es software MIT (salvo el directorio `enterprise/`, que tiene licencia
@@ -144,9 +146,12 @@ oscuro (p.ej. `#cc4e00`, que da 4.6:1) sin tocar el resto de la escala.
 | `app/javascript/widget/components/ChatInputWrap.vue` | Fallback de `var(--widget-color, ...)` en el widget. |
 | `app/views/layouts/vueapp.html.erb` | `<meta name="theme-color">` y `msapplication-TileColor`. **El `<link rel="icon" sizes="512x512">` NO se toca**: ya usa `@global_config['LOGO_THUMBNAIL']`, que viene de `installation_configs`. |
 | `app/views/devise/mailer/_confirmation_body.html.erb` | Boton y enlace del email de confirmacion de cuenta. |
-| `public/manifest.json` | `name`/`short_name` → "Foxxy Chat", `theme_color`/`background_color` → `#f2790e`. |
+| `public/manifest.json` | `name`/`short_name` → "Foxxy Chat", `theme_color`/`background_color` → `#f2790e`, y `"scope": "/"` explicito (spec 073; es el valor por defecto con `start_url` `/`). |
 | `public/*.png` (28 ficheros) | `android-icon-*`, `apple-icon-*`, `favicon-*`, `favicon-badge-*`, `ms-icon-*` regenerados desde el logo de Foxxy. Ver seccion 4. |
 | `public/brand-assets/{logo,logo_dark,logo_thumbnail}.svg` | Assets de marca **por defecto**. En produccion los sobrescribe `installation_configs`, pero `app/views/super_admin/application/_navigation.html.erb` y la pagina de onboarding los referencian por ruta fija. |
+| `app/javascript/v3/views/login/FoxxyLoginButton.vue` | *(nuevo, spec 073 de olympus-ms-front)* Boton «Iniciar sesion con Foxxy»: enlace fijo a `https://app.foxxy.pro/chat/entrar`, que pide la URL SSO con la cuenta de Foxxy y vuelve ya dentro. Texto en el propio componente (es/en), no en los JSON de locale de upstream. |
+| `app/javascript/v3/views/login/FoxxyLoginButton.spec.js` | *(nuevo)* Fija el destino exacto del boton. Si cambia, cambia tambien la ruta `/chat/entrar` del panel, y el panel se despliega antes. |
+| `app/javascript/v3/views/login/Index.vue` | Tres lineas `FOXXY:` que importan, registran y pintan `FoxxyLoginButton` al principio del bloque de metodos alternativos (fuera del flujo SSO). |
 | `docker/build-foxxy.sh` | *(nuevo)* Build reproducible de la imagen CE. |
 | `README-FOXXY.md` | *(nuevo)* Este documento. |
 | `README.md` | Banner de 4 lineas apuntando aqui. Unico cambio. |
@@ -245,7 +250,8 @@ git push origin foxxy-main --force-with-lease --tags
 | `super_admin/index.scss` | bajo | Igual que el anterior. |
 | `theme/icons.js` | bajo, pero es un fichero generado de 97 KB | Si conflictua, quedarse con upstream y volver a hacer `sed -i 's/#2781f6/#f2790e/g' theme/icons.js`. |
 | `public/*.png` | ninguno salvo que upstream cambie de logo | `git checkout --ours` (los nuestros). |
-| `public/manifest.json` | bajo | Reaplicar nombre + colores. |
+| `public/manifest.json` | bajo | Reaplicar nombre + colores + `"scope": "/"`. |
+| `app/javascript/v3/views/login/Index.vue` | bajo-medio — upstream toca el login de vez en cuando | Quedarse con upstream y reponer las tres lineas `FOXXY:` (import, registro en `components`, `<FoxxyLoginButton />` como primer hijo del bloque `flex flex-col gap-4` dentro de `v-if="!email"`). `FoxxyLoginButton.vue` no conflictua: es fichero propio. |
 | `vueapp.html.erb` | bajo | Cuidado: **no** convertir el `<link rel="icon" sizes="512x512">` a ruta fija; debe seguir usando `@global_config['LOGO_THUMBNAIL']`. |
 | `README.md` | bajo | Quedarse con upstream y reponer el banner. |
 
