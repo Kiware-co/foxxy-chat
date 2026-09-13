@@ -20,6 +20,8 @@ import Icon from 'dashboard/components-next/icon/Icon.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import MfaVerification from 'dashboard/components/auth/MfaVerification.vue';
 import SessionLimitOverlay from 'dashboard/components/auth/SessionLimitOverlay.vue';
+// FOXXY: boton «Iniciar sesion con Foxxy» (spec 073), aislado en su propio fichero.
+import FoxxyLoginButton from './FoxxyLoginButton.vue';
 
 const ERROR_MESSAGES = {
   'no-account-found': 'LOGIN.OAUTH.NO_ACCOUNT_FOUND',
@@ -41,6 +43,7 @@ export default {
     MfaVerification,
     SessionLimitOverlay,
     Icon,
+    FoxxyLoginButton, // FOXXY: spec 073
   },
   props: {
     ssoAuthToken: { type: String, default: '' },
@@ -345,6 +348,8 @@ export default {
     >
       <div v-if="!email">
         <div class="flex flex-col gap-4">
+          <!-- FOXXY: spec 073, entrar con la cuenta de Foxxy (rebote a app.foxxy.pro/chat/entrar) -->
+          <FoxxyLoginButton />
           <GoogleOAuthButton v-if="showGoogleOAuth" />
           <div v-if="showSamlLogin" class="text-center">
             <router-link
