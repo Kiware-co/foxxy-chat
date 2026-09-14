@@ -49,4 +49,21 @@ describe('FoxxyLoginButton.vue', () => {
   it('separa el boton del formulario con el divisor «O» de Chatwoot', () => {
     expect(mountWithLocale('es').text()).toContain('O');
   });
+
+  it('«Entrar con un código» abre la pantalla del código en lugar del botón', async () => {
+    const wrapper = mountWithLocale('es');
+    const open = wrapper.find('[data-testid="foxxy-code-open"]');
+    expect(open.text()).toBe('Entrar con un código de la app de Foxxy');
+
+    await open.trigger('click');
+    expect(wrapper.find('[data-testid="foxxy-code-sign-in"]').exists()).toBe(
+      true
+    );
+    expect(wrapper.find('a').exists()).toBe(false);
+
+    await wrapper.find('[data-testid="foxxy-code-back"]').trigger('click');
+    expect(wrapper.find('a').attributes('href')).toBe(
+      'https://app.foxxy.pro/chat/sign-in'
+    );
+  });
 });
