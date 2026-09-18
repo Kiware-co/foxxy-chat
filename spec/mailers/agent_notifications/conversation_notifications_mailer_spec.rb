@@ -110,4 +110,18 @@ RSpec.describe AgentNotifications::ConversationNotificationsMailer do
       expect(mail).to be_nil
     end
   end
+
+  # FOXXY: el chat no entrega ningún aviso a agentes por correo (olympus-ms-back#259).
+  describe 'delivery suppression' do
+    it 'never hands the assignment email to the delivery method' do
+      expect do
+        described_class.with(account: account).conversation_assignment(conversation, agent, nil).deliver_now
+      end.not_to(change { ActionMailer::Base.deliveries.count })
+    end
+
+    it 'marks every agent notification as not deliverable' do
+      mail = described_class.with(account: account).conversation_creation(conversation, agent, nil).deliver_now
+      expect(mail.perform_deliveries).to be(false)
+    end
+  end
 end

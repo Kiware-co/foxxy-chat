@@ -13,7 +13,10 @@ RSpec.describe AccountUser do
       expect(account_user.user.notification_settings).not_to be_nil
 
       expect(account_user.user.notification_settings.first.email_conversation_creation?).to be(false)
-      expect(account_user.user.notification_settings.first.email_conversation_assignment?).to be(true)
+      # FOXXY: nadie nace con avisos por correo (olympus-ms-back#259); el push de asignación se mantiene.
+      expect(account_user.user.notification_settings.first.email_conversation_assignment?).to be(false)
+      expect(account_user.user.notification_settings.first.email_flags).to eq(0)
+      expect(account_user.user.notification_settings.first.push_conversation_assignment?).to be(true)
     end
   end
 

@@ -1,4 +1,9 @@
 class AgentNotifications::ConversationNotificationsMailer < ApplicationMailer
+  # FOXXY: los avisos a agentes no salen nunca por correo, aunque alguien vuelva a activar la
+  # preferencia en su perfil (olympus-ms-back#259: el proveedor bloqueó el SMTP porque estos
+  # correos copiaban el texto de los chats). El mensaje se compone pero no se entrega.
+  after_action :suppress_foxxy_delivery
+
   def conversation_creation(conversation, agent, _user)
     return unless smtp_config_set_or_development?
 
@@ -56,6 +61,10 @@ class AgentNotifications::ConversationNotificationsMailer < ApplicationMailer
   end
 
   private
+
+  def suppress_foxxy_delivery
+    message.perform_deliveries = false
+  end
 
   def liquid_locals
     super.merge({ notification_settings_url: "#{app_account_url(@conversation.account_id)}/profile/settings" })
