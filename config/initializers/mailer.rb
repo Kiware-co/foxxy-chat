@@ -7,7 +7,11 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV['FRONTEND_URL'] } if ENV['FRONTEND_URL'].present?
   # We load certain mailer templates from our database. This ensures changes to it is reflected immediately
   config.action_mailer.perform_caching = false
-  config.action_mailer.perform_deliveries = true
+  # FOXXY: el chat no manda ningún correo, nunca (Julián, 18 sep 2026; olympus-ms-back#259). Fuera
+  # de las pruebas, ActionMailer compone los mensajes pero no los entrega; Devise hereda de
+  # ApplicationMailer y cae en el mismo corte. El interceptor de foxxy_no_email.rb lo remata para
+  # cualquier mensaje que traiga su propio método de entrega (SMTP por buzón).
+  config.action_mailer.perform_deliveries = Rails.env.test?
   config.action_mailer.raise_delivery_errors = true
 
   # Config related to smtp
