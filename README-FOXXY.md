@@ -157,6 +157,8 @@ oscuro (p.ej. `#cc4e00`, que da 4.6:1) sin tocar el resto de la escala.
 | `app/javascript/v3/views/login/foxxySignInUrl.js` | *(nuevo, spec 093)* Validador de la URL de entrada (mismo origen, ruta, token). |
 | `app/javascript/v3/views/login/FoxxyCodeSignIn.spec.js`, `foxxySignInUrl.spec.js` | *(nuevos)* Rutas, cuerpos y `credentials: 'omit'` del contrato con el back; errores 401/404/429/502; URL de otro origen no se abre. Si cambian, cambia `specs/093-login-del-chat-con-codigo/contracts/openapi.yaml` del back, y **el back se despliega antes que el fork**. |
 | `app/javascript/v3/views/login/Index.vue` | Tres lineas `FOXXY:` que importan, registran y pintan `FoxxyLoginButton` al principio del bloque de metodos alternativos (fuera del flujo SSO). |
+| `app/javascript/dashboard/components/widgets/conversation/ConversationHeader.vue` | Dos lineas `FOXXY:` que importan y pintan `FoxxyVirtualModelButton` antes del boton de llamada (spec 211 del back). |
+| `app/javascript/dashboard/components/widgets/conversation/foxxy/` | *(nuevo)* Boton «Pasar a / Sacar a la modelo virtual»: llama a `/v1/public/chat/conversations/{cuenta}/{chat}/bot[/take\|/release]` de foxxy-core con el `access_token` de Chatwoot de quien mira. Va **despues** de que el back publique esas rutas. |
 | `docker/build-foxxy.sh` | *(nuevo)* Build reproducible de la imagen CE. |
 | `README-FOXXY.md` | *(nuevo)* Este documento. |
 | `README.md` | Banner de 4 lineas apuntando aqui. Unico cambio. |
@@ -257,6 +259,7 @@ git push origin foxxy-main --force-with-lease --tags
 | `public/*.png` | ninguno salvo que upstream cambie de logo | `git checkout --ours` (los nuestros). |
 | `public/manifest.json` | bajo | Reaplicar nombre + colores + `"scope": "/"`. |
 | `app/javascript/v3/views/login/Index.vue` | bajo-medio — upstream toca el login de vez en cuando | Quedarse con upstream y reponer las tres lineas `FOXXY:` (import, registro en `components`, `<FoxxyLoginButton />` como primer hijo del bloque `flex flex-col gap-4` dentro de `v-if="!email"`). `FoxxyLoginButton.vue` no conflictua: es fichero propio. |
+| `ConversationHeader.vue` | bajo — upstream toca la cabecera de vez en cuando | Quedarse con upstream y reponer las dos lineas `FOXXY:` (import y `<FoxxyVirtualModelButton :chat="currentChat" :account-id="accountId" />` antes de `ConversationCallButton`). |
 | `vueapp.html.erb` | bajo | Cuidado: **no** convertir el `<link rel="icon" sizes="512x512">` a ruta fija; debe seguir usando `@global_config['LOGO_THUMBNAIL']`. |
 | `README.md` | bajo | Quedarse con upstream y reponer el banner. |
 
